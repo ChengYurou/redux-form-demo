@@ -1,9 +1,9 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux'
 
-const form = handleActions({}, []);
+const test = handleActions({}, []);
 
 export default combineReducers({
-  form,
+  test,
 });
 

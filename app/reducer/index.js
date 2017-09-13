@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
-import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 
-import form from  './form';
+import test from './test';
 
 export default combineReducers({
-  form,
-  simpleForm: formReducer,
+  test,
+  form: formReducer,
 });

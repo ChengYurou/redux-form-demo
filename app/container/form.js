@@ -29,11 +29,7 @@ class Form extends React.Component {
   }
 
   submit = values => {
-    console.log('submitting form', values)
-  };
-
-  change = value => {
-    console.log('on change', value)
+    console.log('submitting test', values)
   };
 
   renderInput = ({ input: { onChange, value}}) => {
@@ -54,7 +50,6 @@ class Form extends React.Component {
   }
 }
 
-export default connect(null, null)(
-  reduxForm({
-    form: 'simpleForm',
-  })(Form));
+export default reduxForm({
+  form:'simpleForm',
+})(Form);
