@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: 100,
   },
   button: {
     backgroundColor: '#69c',
@@ -25,10 +25,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 1,
   },
+  errorText: {
+    fontSize: 14,
+    color: '#F2777A',
+  },
+  warningText: {
+    fontSize: 14,
+    color: '#fc6',
+  }
 });
 
 const party = ['givenName', 'middleName', 'zipCode'];
-const address = ['streetName', 'number', 'zipCode']
+const address = ['streetName', 'number', 'zipCode'];
+
+const validate = values => {
+  const errors = {};
+  if (!values.title) {
+    errors.title = 'title is required'
+  }
+  return errors;
+};
+
+const warn = values => {
+  const warnings = {}
+  if (values.title && values.title.length < 5) {
+    warnings.title = 'Please enter at least 5 characters'
+  }
+  return warnings
+};
 
 class Form extends React.Component {
   constructor(props) {
@@ -40,10 +64,19 @@ class Form extends React.Component {
     console.log('submitting test', values)
   };
 
-  renderInput = ({ input: { onChange, name } }) => {
+  renderInput = ({
+                   input: { onChange, name },
+                   meta: { touched, error, warning },
+                 }) => {
     return <View style={styles.inputRow}>
       <Text>{name}</Text>
-      <TextInput style={styles.input} onChangeText={onChange} />
+      <TextInput
+        style={styles.input}
+        onChangeText={onChange}
+        warning={warning}
+      />
+      {(touched && error) && <Text style={styles.errorText}>{error}</Text>}
+      {(touched && warning) && <Text style={styles.warningText}>{warning}</Text>}
     </View>
   };
 
@@ -67,8 +100,7 @@ class Form extends React.Component {
     const { handleSubmit } = this.props;
     return (
       <View style={styles.container}>
-        <Text>Email:</Text>
-        <Field name="email" component={this.renderInput} />
+        <Field name="title" component={this.renderInput} />
         <FormSection name="buyer">
           {this.renderParty()}
         </FormSection>
@@ -85,4 +117,6 @@ class Form extends React.Component {
 
 export default reduxForm({
   form: 'simpleForm',
+  validate,
+  warn,
 })(Form);
