@@ -1,6 +1,7 @@
 import React from 'react';
 import { Field, FormSection, reduxForm } from 'redux-form';
 import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import * as _ from 'lodash';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +27,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const party = ['givenName', 'middleName', 'zipCode'];
+const address = ['streetName', 'number', 'zipCode']
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -43,19 +47,18 @@ class Form extends React.Component {
     </View>
   };
 
-  renderAddress = () => (<View>
-      <Field name="streetName" component={this.renderInput} />
-      <Field name="number" component={this.renderInput} />
-      <Field name="zipCode" component={this.renderInput} />
-    </View>
+  renderFields = fieldsName => (
+    _.map(fieldsName, (name, index) => (
+      <Field key={index} name={name} component={this.renderInput} />
+    ))
   );
 
   renderParty = () => (<View>
-      <Field name="givenName" component={this.renderInput} />
-      <Field name="middleName" component={this.renderInput} />
-      <Field name="surname" component={this.renderInput} />
-      <FormSection name="address">
-        {this.renderAddress()}
+      {this.renderFields(party)}
+      <FormSection name='address'>
+        <View>
+          {this.renderFields(address)}
+        </View>
       </FormSection>
     </View>
   );
