@@ -29,10 +29,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#F2777A',
   },
+  validateInfo: {
+    flexDirection: 'row',
+  },
   warningText: {
     fontSize: 14,
     color: '#fc6',
-  }
+  },
 });
 
 const party = ['givenName', 'middleName', 'zipCode'];
@@ -60,7 +63,7 @@ class Form extends React.Component {
     this.state = {};
   }
 
-  title = value => (value==='123' ? '123 is not a title' : undefined);
+  title = value => (value === '66666' ? '66666 is not a title' : undefined);
 
   submit = values => {
     console.log('submitting test', values)
@@ -70,15 +73,21 @@ class Form extends React.Component {
                    input: { onChange, name },
                    meta: { touched, error, warning },
                  }) => {
-    return <View style={styles.inputRow}>
-      <Text>{name}</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChange}
-        warning={warning}
-      />
-      {(touched && error) && <Text style={styles.errorText}>{error}</Text>}
-      {(touched && warning) && <Text style={styles.warningText}>{warning}</Text>}
+    return <View>
+      <View style={styles.inputRow}>
+        <Text>{name}</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChange}
+          warning={warning}
+        />
+      </View>
+      {(touched && error) && (
+        <View style={styles.validateInfo}><Text style={styles.errorText}>{error}</Text></View>
+      )}
+      {(touched && warning) && (
+        <View style={styles.validateInfo}><Text style={styles.warningText}>{warning}</Text></View>
+      )}
     </View>
   };
 
