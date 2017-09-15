@@ -60,6 +60,8 @@ class Form extends React.Component {
     this.state = {};
   }
 
+  title = value => (value==='123' ? '123 is not a title' : undefined);
+
   submit = values => {
     console.log('submitting test', values)
   };
@@ -100,7 +102,10 @@ class Form extends React.Component {
     const { handleSubmit } = this.props;
     return (
       <View style={styles.container}>
-        <Field name="title" component={this.renderInput} />
+        <Field name="title"
+               component={this.renderInput}
+               validate={this.title}
+        />
         <FormSection name="buyer">
           {this.renderParty()}
         </FormSection>
