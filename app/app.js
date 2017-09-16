@@ -7,7 +7,8 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createLogger from 'redux-logger';
 import reducers from './reducer';
-import SimpleForm from './container/form';
+// import SimpleForm from './container/form';
+import Order from './container/order';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +30,7 @@ export default function FromApp() {
   return (
     <Provider store={store}>
       <View style={styles.container}>
-        <SimpleForm />
+        <Order />
       </View>
     </Provider>
   );
