@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   itemBaseInfoContainer: {
     flex: 2,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   itemText: {
     fontSize: 14,
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   priceAndCount: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   countInput: {
     flex: 1,
@@ -43,6 +43,14 @@ const styles = StyleSheet.create({
     borderColor: '#393939',
     borderWidth: 0.5,
   },
+  totalPriceContainer: {
+    marginVertical: 5,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  totalPriceText: {
+    fontSize: 16,
+  }
 });
 
 
@@ -113,6 +121,21 @@ class ItemList extends React.Component {
     </View>
   );
 
+  getTotalPrice = () => (
+    _.sumBy(
+      _.filter(
+        this.props.items,
+        item => _.toNumber(item.count) > 0,
+      ), a => _.toNumber(a.count) * _.toNumber(a.price),
+    )
+  );
+
+  renderTotalPrice = ({ input: { value }, totalPrice}) => (
+    <View style={styles.totalPriceContainer}>
+      <Text style={styles.totalPriceText}>{`总计：${totalPrice}¥`}</Text>
+    </View>
+  );
+
   render() {
     return (
       <View style={styles.itemListContainer}>
@@ -121,6 +144,7 @@ class ItemList extends React.Component {
           renderHeader={this.renderHeader}
           renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
         />
+        <Field name="totalPrice" component={this.renderTotalPrice} totalPrice={this.getTotalPrice()}/>
       </View>
     )
   }
