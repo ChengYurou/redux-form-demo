@@ -53,6 +53,11 @@ const styles = StyleSheet.create({
   }
 });
 
+const lessThan = otherField  => (value, previousValue, allValues) => {
+  const otherFieldValue = _.get(allValues, otherField);
+  return _.toNumber(value) <= _.toNumber(otherFieldValue) ? value : previousValue;
+};
+
 
 class ItemList extends React.Component {
   constructor(props) {
@@ -96,7 +101,7 @@ class ItemList extends React.Component {
                         component={this.renderItemCode} />
         })}
         <Field name="price" component={this.renderPrice} />
-        <Field name="count" component={this.renderCountInput} />
+        <Field name="count" component={this.renderCountInput} normalize={lessThan(`items.${rowId}.totalCount`)}/>
       </View>
     </FormSection>
   );
@@ -144,7 +149,11 @@ class ItemList extends React.Component {
           renderHeader={this.renderHeader}
           renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
         />
-        <Field name="totalPrice" component={this.renderTotalPrice} totalPrice={this.getTotalPrice()}/>
+        <Field
+          name="totalPrice"
+          component={this.renderTotalPrice}
+          totalPrice={this.getTotalPrice()}
+        />
       </View>
     )
   }
