@@ -1,8 +1,10 @@
 import React from 'react';
-import { Field, FormSection, reduxForm } from 'redux-form';
-import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { reduxForm } from 'redux-form';
+import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { ORDER_STATUS } from '../constant/order';
 import ItemList from './itemList';
+import { fetchStoreItems } from '../../apis/order';
+import * as _ from 'lodash';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +17,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     marginTop: 10,
     textAlign: 'center',
-    width: 300,
+    width: 400,
   },
 });
 
@@ -29,14 +31,38 @@ class Order extends React.Component {
     };
   }
 
+  getEmptyOrder = () => {
+    const items = _.keyBy(fetchStoreItems(), item => item.code);
+    return {
+      items,
+      totalPrice: 0,
+      otherInfo: {
+        buyer: {
+          name: '',
+          telephone: '',
+          address: {},
+        },
+        recipient: {
+          name: '',
+          telephone: '',
+          address: {},
+        },
+      },
+    };
+  };
+
+  componentDidMount() {
+    this.props.initialize(this.getEmptyOrder())
+  }
+
   judgeItemListDisplay = () => {
     this.setState({ isItemListDisplay: this.state.orderStatus !== ORDER_STATUS.UN_CREATE })
   };
 
   setOrderStatus(orderStatus) {
-      this.setState({ orderStatus }, () => {
-        this.judgeItemListDisplay();
-      });
+    this.setState({ orderStatus }, () => {
+      this.judgeItemListDisplay();
+    });
   }
 
   handleButtonPress = () => {
@@ -66,6 +92,7 @@ class Order extends React.Component {
 
 Order.propTypes = {
   orderStatus: React.PropTypes.string,
+  initialize: React.PropTypes.func.isRequired,
 };
 
 Order.defaultProps = {
