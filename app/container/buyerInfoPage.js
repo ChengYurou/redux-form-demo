@@ -1,6 +1,34 @@
 import React from 'react'
-import { reduxForm } from 'redux-form'
-import { Text, TouchableOpacity, View } from 'react-native';
+import { FormSection, reduxForm } from 'redux-form'
+import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import UserInfoField from './userInfoField';
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#69c',
+    color: '#393939',
+    height: 30,
+    lineHeight: 30,
+    marginTop: 10,
+    textAlign: 'center',
+    width: 100,
+  },
+  InfoContainer: {
+    borderWidth: 0.5,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
+  title: {
+    fontSize: 14,
+    color: '#393939',
+  }
+});
 
 class BuyerInfoPage extends React.Component{
 
@@ -12,10 +40,17 @@ class BuyerInfoPage extends React.Component{
   render() {
     return (
       <View>
-        <Text>BuyerInfoPage</Text>
-        <TouchableOpacity onPress={this.props.goNextPage}>
-          <Text>下一步</Text>
-        </TouchableOpacity>
+        <View style={styles.InfoContainer}>
+          <Text style={styles.title}>请完善收件人信息：</Text>
+          <FormSection name="buyer">
+            <UserInfoField/>
+          </FormSection>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={this.props.goNextPage}>
+              <Text style={styles.button}>下一步</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     )
   }

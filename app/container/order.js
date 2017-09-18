@@ -39,18 +39,17 @@ class Order extends React.Component {
     return {
       items,
       totalPrice: 0,
-      otherInfo: {
-        buyer: {
-          name: '',
-          telephone: '',
-          address: {},
-        },
-        recipient: {
-          name: '',
-          telephone: '',
-          address: {},
-        },
+      buyer: {
+        name: '',
+        telephone: '',
+        address: '',
       },
+      recipient: {
+        name: '',
+        telephone: '',
+        address: '',
+      },
+
     };
   };
 
@@ -65,8 +64,8 @@ class Order extends React.Component {
   setOrderStatus(orderStatus) {
     this.setState({ orderStatus }, () => {
       this.judgeItemListDisplay();
-      if(this.state.orderStatus === ORDER_STATUS.CREATED) {
-        this.setState({page: 1});
+      if (this.state.orderStatus === ORDER_STATUS.CREATED) {
+        this.setState({ page: 1 });
       }
     });
   }
@@ -86,6 +85,11 @@ class Order extends React.Component {
     this.setState({ page: this.state.page + 1 })
   };
 
+  goPreviousPage = () => {
+    this.setState({ page: this.state.page - 1 })
+  };
+
+
   render() {
     return (
       <View style={styles.container}>
@@ -95,8 +99,8 @@ class Order extends React.Component {
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
         {this.state.isItemListDisplay && <ItemList />}
-        {this.state.page === 1 && <BuyerInfoPage goNextPage={this.goNextPage}/>}
-        {this.state.page === 2 && <RecipientInfoPage/>}
+        {this.state.page === 1 && <BuyerInfoPage goNextPage={this.goNextPage} />}
+        {this.state.page === 2 && <RecipientInfoPage goPreviousPage={this.goPreviousPage} />}
       </View>
     )
   }

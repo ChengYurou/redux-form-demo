@@ -23,9 +23,11 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 14,
+    color: '#393939',
   },
   headerName: {
     fontSize: 16,
+    color: '#393939',
   },
   header: {
     flexDirection: 'row',
@@ -50,6 +52,7 @@ const styles = StyleSheet.create({
   },
   totalPriceText: {
     fontSize: 16,
+    color: '#393939',
   }
 });
 
