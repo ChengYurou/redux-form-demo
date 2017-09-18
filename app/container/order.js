@@ -1,10 +1,12 @@
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import * as _ from 'lodash';
 import { ORDER_STATUS } from '../constant/order';
 import ItemList from './itemList';
 import { fetchStoreItems } from '../../apis/order';
-import * as _ from 'lodash';
+import BuyerInfoPage from './buyerInfoPage';
+import RecipientInfoPage from './recipientInfoPage'
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +30,7 @@ class Order extends React.Component {
     this.state = {
       orderStatus: this.props.orderStatus,
       isItemListDisplay: this.props.orderStatus !== ORDER_STATUS.UN_CREATE,
+      page: 0,
     };
   }
 
@@ -62,6 +65,9 @@ class Order extends React.Component {
   setOrderStatus(orderStatus) {
     this.setState({ orderStatus }, () => {
       this.judgeItemListDisplay();
+      if(this.state.orderStatus === ORDER_STATUS.CREATED) {
+        this.setState({page: 1});
+      }
     });
   }
 
@@ -76,6 +82,10 @@ class Order extends React.Component {
     }
   };
 
+  goNextPage = () => {
+    this.setState({ page: this.state.page + 1 })
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -85,6 +95,8 @@ class Order extends React.Component {
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
         {this.state.isItemListDisplay && <ItemList />}
+        {this.state.page === 1 && <BuyerInfoPage goNextPage={this.goNextPage}/>}
+        {this.state.page === 2 && <RecipientInfoPage/>}
       </View>
     )
   }
