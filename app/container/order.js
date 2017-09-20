@@ -1,16 +1,16 @@
 import React from 'react';
-import { getFormValues, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import * as _ from 'lodash';
 import { ORDER_STATUS } from '../constant/order';
 import ItemList from './itemList';
 import { fetchStoreItems } from '../../apis/order';
-import CustomerInfoPage from './customerInfoPage';
-import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 30,
+    marginHorizontal: 10,
   },
   button: {
     backgroundColor: '#69c',
@@ -78,24 +78,11 @@ class Order extends React.Component {
     }
     if (orderStatus === ORDER_STATUS.EDIT) {
       this.setOrderStatus(ORDER_STATUS.CREATED)
+      Actions.customerInfo()
     }
   };
 
-  goNextPage = () => {
-    this.setState({ page: this.state.page + 1 })
-  };
-
-  goPreviousPage = () => {
-    this.setState({ page: this.state.page - 1 })
-  };
-
-  submitOrder = () => {
-    console.log('===========')
-    console.log(this.props.values);
-  };
-
   render() {
-    const { handleSubmit} = this.props;
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -104,22 +91,9 @@ class Order extends React.Component {
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
         {this.state.isItemListDisplay && <ItemList />}
-        {this.state.page === 1 && (
-          <CustomerInfoPage
-            goNextPage={this.goNextPage}
-            customerName="buyer"
-          />
-        )}
-        {this.state.page === 2 && (
-          <CustomerInfoPage
-            customerName="recipient"
-            goPreviousPage={this.goPreviousPage}
-            onSubmit={this.submitOrder}
-          />
-        )}
         <TouchableOpacity
-          onPress={this.submitOrder} >
-          <Text style={styles.button}>submit</Text>
+          onPress={this.props.handleSubmit(console.log)}>
+          <Text style={styles.button}>调教</Text>
         </TouchableOpacity>
       </View>
     )
@@ -136,13 +110,6 @@ Order.defaultProps = {
   orderStatus: ORDER_STATUS.UN_CREATE,
 };
 
-
-const mapStateToProps = (state) => {
-  return {
-    values: getFormValues('order')(state)
-  }
-};
-
-export default connect(mapStateToProps, null)(reduxForm({
+export default reduxForm({
   form: 'order',
-})(Order));
+})(Order)

@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
     width: 100,
   },
   InfoContainer: {
+    marginTop: 50,
+    marginHorizontal: 10,
     borderWidth: 0.5,
     borderColor: '#ccc',
     borderRadius: 5,
@@ -42,8 +44,12 @@ class CustomerInfoPage extends React.Component {
     this.state = {};
   }
 
+  submitCustomerInfo = (values) => {
+
+  };
+
   render() {
-    const { customerName, goPreviousPage, goNextPage, onSubmit } = this.props;
+    const { customerName, goPreviousPage, goNextPage, handleSubmit } = this.props;
     return (
       <View>
         <View style={styles.InfoContainer}>
@@ -58,12 +64,12 @@ class CustomerInfoPage extends React.Component {
               </TouchableOpacity>
             )}
             {customerName === 'recipient' && (
-              <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
+              <TouchableOpacity onPress={handleSubmit(this.submitCustomerInfo)} style={styles.submitButton}>
                 <Text style={styles.button}>提交</Text>
               </TouchableOpacity>
             )}
             {customerName === 'buyer' && (
-              <TouchableOpacity onPress={goNextPage}>
+              <TouchableOpacity onPress={handleSubmit(goNextPage)}>
                 <Text style={styles.button}>下一步</Text>
               </TouchableOpacity>
             )}
@@ -77,17 +83,16 @@ class CustomerInfoPage extends React.Component {
 CustomerInfoPage.propTypes = {
   goNextPage: React.PropTypes.func,
   goPreviousPage: React.PropTypes.func,
-  onSubmit: React.PropTypes.func,
   customerName: React.PropTypes.string.isRequired,
 };
 
 CustomerInfoPage.defaultProps = {
   goNextPage: _.noop,
   goPreviousPage: _.noop,
-  onSubmit: _.noop,
 };
 
 export default reduxForm({
-  form: 'order',
+  form: 'customerInfo',
   destroyOnUnmount: false,
+  forceUnregisterOnUnmount: true,
 })(CustomerInfoPage)

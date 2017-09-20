@@ -18,7 +18,11 @@ const styles = StyleSheet.create({
   text: {
     color: '#393939',
     fontSize: 14,
-  }
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#F2777A',
+  },
 });
 
 class UserInfoField extends React.Component {
@@ -27,23 +31,31 @@ class UserInfoField extends React.Component {
     this.state = {};
   }
 
-  renderNameInput = ({ input: { onChange, value }}) => (
+  required = value => (value ? undefined : '此项为必填项');
+
+  renderNameInput = ({ input: { onChange, value }, meta: {touched, error}}) => (
     <View style={styles.InfoRow}>
       <Text style={styles.text}>姓名:</Text>
       <TextInput
         style={styles.nameInput}
         onChangeText={onChange}
       />
+      {(touched && error) && (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
     </View>
   );
 
-  renderTelephoneInput = ({input: {onChange, value}}) => (
+  renderTelephoneInput = ({input: {onChange, value}, meta: {touched, error}}) => (
     <View style={styles.InfoRow}>
       <Text style={styles.text}>手机号:</Text>
       <TextInput
         style={styles.nameInput}
         onChangeText={onChange}
       />
+      {(touched && error) && (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
     </View>
   );
 
@@ -60,8 +72,15 @@ class UserInfoField extends React.Component {
   render() {
     return (
       <View>
-        <Field name="name" component={this.renderNameInput} />
-        <Field name="telephone" component={this.renderTelephoneInput} />
+        <Field name="name"
+               component={this.renderNameInput}
+               validate={this.required}
+        />
+        <Field
+          name="telephone"
+          component={this.renderTelephoneInput}
+          validate={this.required}
+        />
         <Field name="address" component={this.renderAddressInput} />
       </View>
     );
