@@ -33,6 +33,11 @@ class UserInfoField extends React.Component {
 
   required = value => (value ? undefined : '此项为必填项');
 
+  telephoneNumber = value =>
+    value && !/^1[3|4|5|7|8][0-9]\d{4,8}$/i.test(value)
+      ? '请输入合法手机号'
+      : undefined;
+
   renderNameInput = ({ input: { onChange, value }, meta: {touched, error}}) => (
     <View style={styles.InfoRow}>
       <Text style={styles.text}>姓名:</Text>
@@ -79,7 +84,7 @@ class UserInfoField extends React.Component {
         <Field
           name="telephone"
           component={this.renderTelephoneInput}
-          validate={this.required}
+          validate={[this.required,this.telephoneNumber]}
         />
         <Field name="address" component={this.renderAddressInput} />
       </View>
