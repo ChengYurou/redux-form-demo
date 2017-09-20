@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#393939',
     borderBottomWidth: 0.5,
   },
-  nameInput: {
+  baseInput: {
     flex: 1,
     height: 30,
     marginVertical: 2,
@@ -38,11 +38,15 @@ class UserInfoField extends React.Component {
       ? '请输入合法手机号'
       : undefined;
 
-  renderNameInput = ({ input: { onChange, value }, meta: {touched, error}}) => (
+  renderBaseInput = ({
+                       input: { onChange, value },
+                       meta: { touched, error },
+                       title,
+                     }) => (
     <View style={styles.InfoRow}>
-      <Text style={styles.text}>姓名:</Text>
+      <Text style={styles.text}>{title}</Text>
       <TextInput
-        style={styles.nameInput}
+        style={styles.baseInput}
         onChangeText={onChange}
       />
       {(touched && error) && (
@@ -51,24 +55,11 @@ class UserInfoField extends React.Component {
     </View>
   );
 
-  renderTelephoneInput = ({input: {onChange, value}, meta: {touched, error}}) => (
-    <View style={styles.InfoRow}>
-      <Text style={styles.text}>手机号:</Text>
-      <TextInput
-        style={styles.nameInput}
-        onChangeText={onChange}
-      />
-      {(touched && error) && (
-        <Text style={styles.errorText}>{error}</Text>
-      )}
-    </View>
-  );
-
-  renderAddressInput = ({input: {onChange, value}}) => (
+  renderAddressInput = ({ input: { onChange, value } }) => (
     <View style={styles.InfoRow}>
       <Text style={styles.text}>地址:</Text>
       <TextInput
-        style={styles.nameInput}
+        style={styles.baseInput}
         onChangeText={onChange}
       />
     </View>
@@ -78,13 +69,15 @@ class UserInfoField extends React.Component {
     return (
       <View>
         <Field name="name"
-               component={this.renderNameInput}
+               component={this.renderBaseInput}
                validate={this.required}
+               title="姓名："
         />
         <Field
           name="telephone"
-          component={this.renderTelephoneInput}
-          validate={[this.required,this.telephoneNumber]}
+          component={this.renderBaseInput}
+          validate={[this.required, this.telephoneNumber]}
+          title="手机号："
         />
         <Field name="address" component={this.renderAddressInput} />
       </View>

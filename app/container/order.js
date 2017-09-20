@@ -91,10 +91,6 @@ class Order extends React.Component {
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
         {this.state.isItemListDisplay && <ItemList />}
-        <TouchableOpacity
-          onPress={this.props.handleSubmit(console.log)}>
-          <Text style={styles.button}>调教</Text>
-        </TouchableOpacity>
       </View>
     )
   }
