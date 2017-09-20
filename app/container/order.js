@@ -1,12 +1,12 @@
 import React from 'react';
-import { reduxForm } from 'redux-form';
+import { getFormValues, reduxForm } from 'redux-form';
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import * as _ from 'lodash';
 import { ORDER_STATUS } from '../constant/order';
 import ItemList from './itemList';
 import { fetchStoreItems } from '../../apis/order';
-import BuyerInfoPage from './buyerInfoPage';
-import RecipientInfoPage from './recipientInfoPage'
+import CustomerInfoPage from './customerInfoPage';
+import { connect } from 'react-redux';
 
 const styles = StyleSheet.create({
   container: {
@@ -89,8 +89,13 @@ class Order extends React.Component {
     this.setState({ page: this.state.page - 1 })
   };
 
+  submitOrder = () => {
+    console.log('===========')
+    console.log(this.props.values);
+  };
 
   render() {
+    const { handleSubmit} = this.props;
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -99,8 +104,23 @@ class Order extends React.Component {
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
         {this.state.isItemListDisplay && <ItemList />}
-        {this.state.page === 1 && <BuyerInfoPage goNextPage={this.goNextPage} />}
-        {this.state.page === 2 && <RecipientInfoPage goPreviousPage={this.goPreviousPage} />}
+        {this.state.page === 1 && (
+          <CustomerInfoPage
+            goNextPage={this.goNextPage}
+            customerName="buyer"
+          />
+        )}
+        {this.state.page === 2 && (
+          <CustomerInfoPage
+            customerName="recipient"
+            goPreviousPage={this.goPreviousPage}
+            onSubmit={this.submitOrder}
+          />
+        )}
+        <TouchableOpacity
+          onPress={this.submitOrder} >
+          <Text style={styles.button}>submit</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -109,12 +129,20 @@ class Order extends React.Component {
 Order.propTypes = {
   orderStatus: React.PropTypes.string,
   initialize: React.PropTypes.func.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
 };
 
 Order.defaultProps = {
   orderStatus: ORDER_STATUS.UN_CREATE,
 };
 
-export default reduxForm({
+
+const mapStateToProps = (state) => {
+  return {
+    values: getFormValues('order')(state)
+  }
+};
+
+export default connect(mapStateToProps, null)(reduxForm({
   form: 'order',
-})(Order);
+})(Order));

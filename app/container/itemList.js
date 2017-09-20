@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
   totalPriceText: {
     fontSize: 16,
     color: '#393939',
-  }
+  },
 });
 
-const lessThan = otherField  => (value, previousValue, allValues) => {
+const lessThan = otherField => (value, previousValue, allValues) => {
   const otherFieldValue = _.get(allValues, otherField);
   return _.toNumber(value) <= _.toNumber(otherFieldValue) ? value : previousValue;
 };
@@ -104,7 +104,7 @@ class ItemList extends React.Component {
                         component={this.renderItemCode} />
         })}
         <Field name="price" component={this.renderPrice} />
-        <Field name="count" component={this.renderCountInput} normalize={lessThan(`items.${rowId}.totalCount`)}/>
+        <Field name="count" component={this.renderCountInput} normalize={lessThan(`items.${rowId}.totalCount`)} />
       </View>
     </FormSection>
   );
@@ -138,7 +138,7 @@ class ItemList extends React.Component {
     )
   );
 
-  renderTotalPrice = ({ input: { value }, totalPrice}) => (
+  renderTotalPrice = ({ input: { value }, totalPrice }) => (
     <View style={styles.totalPriceContainer}>
       <Text style={styles.totalPriceText}>{`总计：${totalPrice}¥`}</Text>
     </View>
@@ -154,6 +154,7 @@ class ItemList extends React.Component {
         />
         <Field
           name="totalPrice"
+          value={this.getTotalPrice()}
           component={this.renderTotalPrice}
           totalPrice={this.getTotalPrice()}
         />
