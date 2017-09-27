@@ -48,6 +48,7 @@ class UserInfoField extends React.Component {
       <TextInput
         style={styles.baseInput}
         onChangeText={onChange}
+        value={value}
       />
       {(touched && error) && (
         <Text style={styles.errorText}>{error}</Text>
@@ -61,6 +62,7 @@ class UserInfoField extends React.Component {
       <TextInput
         style={styles.baseInput}
         onChangeText={onChange}
+        value={value}
       />
     </View>
   );

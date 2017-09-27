@@ -71,7 +71,7 @@ class ItemList extends React.Component {
 
   getDataSource = () => {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    return ds.cloneWithRows(this.props.items)
+    return ds.cloneWithRows(this.props.items || [])
   };
 
   renderItemCode = ({ input: { value } }) => (

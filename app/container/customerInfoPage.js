@@ -45,7 +45,7 @@ class CustomerInfoPage extends React.Component {
   }
 
   submitCustomerInfo = (values) => {
-
+    console.log(values)
   };
 
   render() {

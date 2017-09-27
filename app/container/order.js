@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginHorizontal: 10,
   },
+  buttonContainer: {
+    flex: 1,
+  },
   button: {
     backgroundColor: '#69c',
     color: '#393939',
@@ -19,7 +22,6 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     marginTop: 10,
     textAlign: 'center',
-    width: 400,
   },
 });
 
@@ -39,17 +41,6 @@ class Order extends React.Component {
     return {
       items,
       totalPrice: 0,
-      buyer: {
-        name: '',
-        telephone: '',
-        address: '',
-      },
-      recipient: {
-        name: '',
-        telephone: '',
-        address: '',
-      },
-
     };
   };
 
@@ -77,12 +68,16 @@ class Order extends React.Component {
       this.setOrderStatus(ORDER_STATUS.EDIT)
     }
     if (orderStatus === ORDER_STATUS.EDIT) {
-      this.setOrderStatus(ORDER_STATUS.CREATED)
-      Actions.customerInfo()
+      this.setOrderStatus(ORDER_STATUS.CREATED);
+      this.props.handleSubmit(console.log)
+      Actions.customerInfo();
     }
   };
 
   render() {
+    const { handleSubmit } = this.props;
+    console.log(handleSubmit);
+    console.log('111')
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -90,7 +85,12 @@ class Order extends React.Component {
           disabled={this.state.orderStatus === ORDER_STATUS.CREATED}>
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
-        {this.state.isItemListDisplay && <ItemList />}
+        <TouchableOpacity
+          onPress={handleSubmit((values) => console.log(values))}>
+          <Text style={styles.button}>submit</Text>
+        </TouchableOpacity>
+        <ItemList />
+        {/*{this.state.isItemListDisplay && <ItemList />}*/}
       </View>
     )
   }
