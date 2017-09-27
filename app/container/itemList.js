@@ -70,6 +70,10 @@ class ItemList extends React.Component {
     this.state = {};
   }
 
+  componentDidUpdate() {
+    this.props.updateTotalPrice({ totalPrice: this.getTotalPrice() })
+  }
+
   renderItemCode = ({ input: { value } }) => (
     <View style={styles.itemBaseInfoContainer}>
       <Text style={styles.itemText}>{value}</Text>
@@ -110,17 +114,12 @@ class ItemList extends React.Component {
     </View>
   );
 
-  getTotalPrice = () => {
-    const totalPrice = _.sumBy(
-      _.filter(
-        this.props.items,
-        item => _.toNumber(item.count) > 0,
-      ), a => _.toNumber(a.count) * _.toNumber(a.price),
-    );
-    this.props.updateTotalPrice({ totalPrice: totalPrice });
-
-    return totalPrice
-  };
+  getTotalPrice = () => (_.sumBy(
+    _.filter(
+      this.props.items,
+      item => _.toNumber(item.count) > 0,
+    ), a => _.toNumber(a.count) * _.toNumber(a.price),
+  ));
 
   renderTotalPrice = ({ input: { value }, totalPrice }) => (
     <View style={styles.totalPriceContainer}>
@@ -175,7 +174,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  updateTotalPrice: updateTotalPrice
+  updateTotalPrice: updateTotalPrice,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemList);
