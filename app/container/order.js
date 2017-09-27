@@ -37,9 +37,8 @@ class Order extends React.Component {
   }
 
   getEmptyOrder = () => {
-    const items = _.keyBy(fetchStoreItems(), item => item.code);
     return {
-      items,
+      items: fetchStoreItems(),
       totalPrice: 0,
     };
   };
@@ -69,15 +68,16 @@ class Order extends React.Component {
     }
     if (orderStatus === ORDER_STATUS.EDIT) {
       this.setOrderStatus(ORDER_STATUS.CREATED);
-      this.props.handleSubmit(console.log)
-      Actions.customerInfo();
     }
+  };
+
+  submitOrder = (values) => {
+    console.log(values);
+    Actions.customerInfo();
   };
 
   render() {
     const { handleSubmit } = this.props;
-    console.log(handleSubmit);
-    console.log('111')
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -85,12 +85,12 @@ class Order extends React.Component {
           disabled={this.state.orderStatus === ORDER_STATUS.CREATED}>
           <Text style={styles.button}>{this.state.orderStatus}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleSubmit((values) => console.log(values))}>
-          <Text style={styles.button}>submit</Text>
-        </TouchableOpacity>
-        <ItemList />
-        {/*{this.state.isItemListDisplay && <ItemList />}*/}
+        {this.state.isItemListDisplay && <ItemList />}
+        {this.state.orderStatus === ORDER_STATUS.CREATED && (
+          <TouchableOpacity onPress={handleSubmit((this.submitOrder))}>
+            <Text style={styles.button}>提交订单</Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   }

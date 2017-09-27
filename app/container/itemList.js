@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Text, ListView, TextInput } from 'react-native';
-import { Field, FormSection, formValueSelector } from 'redux-form';
+import { View, StyleSheet, Text, ListView, TextInput, TouchableOpacity } from 'react-native';
+import { Field, FieldArray, FormSection, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderColor: '#393939',
     borderWidth: 0.5,
+    height: 20,
   },
   totalPriceContainer: {
     marginVertical: 5,
@@ -68,12 +69,6 @@ class ItemList extends React.Component {
     this.state = {};
   }
 
-
-  getDataSource = () => {
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    return ds.cloneWithRows(this.props.items || [])
-  };
-
   renderItemCode = ({ input: { value } }) => (
     <View style={styles.itemBaseInfoContainer}>
       <Text style={styles.itemText}>{value}</Text>
@@ -92,21 +87,6 @@ class ItemList extends React.Component {
       onChangeText={onChange}
       value={value}
     />
-  );
-
-
-  renderRow = (rowData, rowId) => (
-    <FormSection name={`items.${rowId}`}>
-      <View style={[styles.row, rowId % 2 && styles.evenRow]}>
-        {_.map(['code', 'name', 'totalCount'], (item, index) => {
-          return <Field name={item}
-                        key={index}
-                        component={this.renderItemCode} />
-        })}
-        <Field name="price" component={this.renderPrice} />
-        <Field name="count" component={this.renderCountInput} normalize={lessThan(`items.${rowId}.totalCount`)} />
-      </View>
-    </FormSection>
   );
 
   renderHeader = () => (
@@ -144,14 +124,35 @@ class ItemList extends React.Component {
     </View>
   );
 
+  renderRow = (member, index) => (
+    <View style={[styles.row, index % 2 && styles.evenRow]} key={index}>
+      {_.map(['code', 'name', 'totalCount'], (item, index) => {
+        return <Field name={`${member}.${item}`}
+                      key={index}
+                      component={this.renderItemCode} />
+      })}
+      <Field name={`${member}.price`} component={this.renderPrice} />
+      <Field name={`${member}.count`}
+             component={this.renderCountInput}
+             normalize={lessThan(`items[${index}].totalCount`)} />
+    </View>
+  );
+
+  renderItems = ({ fields }) => {
+    return (
+      <View>
+        {fields.map((member, index) => {
+          return this.renderRow(member, index);
+        })}
+      </View>
+    )
+  };
+
   render() {
     return (
       <View style={styles.itemListContainer}>
-        <ListView
-          dataSource={this.getDataSource()}
-          renderHeader={this.renderHeader}
-          renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
-        />
+        {this.renderHeader()}
+        <FieldArray name="items" component={this.renderItems} />
         <Field
           name="totalPrice"
           value={this.getTotalPrice()}
