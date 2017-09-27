@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, ListView, TextInput, TouchableOpacity } from 'r
 import { Field, FieldArray, FormSection, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
+import { updateTotalPrice } from '../actions/order';
 
 const styles = StyleSheet.create({
   itemListContainer: {
@@ -109,14 +110,17 @@ class ItemList extends React.Component {
     </View>
   );
 
-  getTotalPrice = () => (
-    _.sumBy(
+  getTotalPrice = () => {
+    const totalPrice = _.sumBy(
       _.filter(
         this.props.items,
         item => _.toNumber(item.count) > 0,
       ), a => _.toNumber(a.count) * _.toNumber(a.price),
-    )
-  );
+    );
+    this.props.updateTotalPrice({ totalPrice: totalPrice });
+
+    return totalPrice
+  };
 
   renderTotalPrice = ({ input: { value }, totalPrice }) => (
     <View style={styles.totalPriceContainer}>
@@ -155,7 +159,6 @@ class ItemList extends React.Component {
         <FieldArray name="items" component={this.renderItems} />
         <Field
           name="totalPrice"
-          value={this.getTotalPrice()}
           component={this.renderTotalPrice}
           totalPrice={this.getTotalPrice()}
         />
@@ -171,4 +174,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(ItemList);
+const mapDispatchToProps = {
+  updateTotalPrice: updateTotalPrice
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ItemList);
