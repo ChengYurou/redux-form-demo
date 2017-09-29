@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
   },
+  disabledButton: {
+    backgroundColor: '#969896',
+  },
 });
 
 
@@ -78,15 +81,18 @@ class Order extends React.Component {
 
   render() {
     const { handleSubmit } = this.props;
+    const isOrderCreated = this.state.orderStatus === ORDER_STATUS.CREATED;
     return (
       <View style={styles.container}>
         <TouchableOpacity
           onPress={this.handleButtonPress}
-          disabled={this.state.orderStatus === ORDER_STATUS.CREATED}>
-          <Text style={styles.button}>{this.state.orderStatus}</Text>
+          disabled={isOrderCreated}>
+          <Text style={isOrderCreated ? [styles.button, styles.disabledButton] : styles.button}>
+            {this.state.orderStatus}
+          </Text>
         </TouchableOpacity>
         {this.state.isItemListDisplay && <ItemList />}
-        {this.state.orderStatus === ORDER_STATUS.CREATED && (
+        {isOrderCreated && (
           <TouchableOpacity onPress={handleSubmit((this.submitOrder))}>
             <Text style={styles.button}>提交订单</Text>
           </TouchableOpacity>
